@@ -13,7 +13,7 @@ public static class MatrixService
 
         var steps = new List<double[][]>();
         double determinant = GaussElimination(matrix, steps, showSteps);
-        
+
         return new DeterminantResult((int)Math.Round(determinant), steps);
     }
 
@@ -58,6 +58,33 @@ public static class MatrixService
         }
 
         return inverseJagged;
+    }
+
+    public static double[][] CalculateTranspose(double[][] jaggedMatrix)
+    {
+        if (jaggedMatrix == null || jaggedMatrix.Length == 0)
+        {
+            throw new ArgumentException("Matrix cannot be null or empty.");
+        }
+
+        int rows = jaggedMatrix.Length;
+        int cols = jaggedMatrix[0].Length;
+
+        double[][] transposedMatrix = new double[cols][];
+        for (int i = 0; i < cols; i++)
+        {
+            transposedMatrix[i] = new double[rows];
+        }
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                transposedMatrix[j][i] = jaggedMatrix[i][j];
+            }
+        }
+
+        return transposedMatrix;
     }
 
     private static bool IsSquareMatrix(double[][] matrix)
@@ -185,4 +212,6 @@ public static class MatrixService
 
         return inverse;
     }
+
+
 }

@@ -1,3 +1,3 @@
 namespace MatrixiaApi.Contracts;
 
-public record class DeterminantRequest(double[][] Matrix, bool ShowSteps);
+public record class DeterminantRequest(double[][] Matrix, bool? ShowSteps);

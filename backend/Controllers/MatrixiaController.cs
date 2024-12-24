@@ -13,7 +13,7 @@ public class MatrixiaController : ControllerBase
     {
         try
         {
-            var result = MatrixService.CalculateDeterminant(request.Matrix, request.ShowSteps);
+            var result = MatrixService.CalculateDeterminant(request.Matrix, request.ShowSteps ?? false);
             return Ok(result);
         }
         catch (Exception ex)
@@ -47,6 +47,20 @@ public class MatrixiaController : ControllerBase
         catch (ArgumentException ex)
         {
             return BadRequest($"Error calculating inverse: {ex.Message}");
+        }
+    }
+
+    [HttpPost("transpose")]
+    public IActionResult CalculateTranspose([FromBody] TransposeRequest request)
+    {
+        try
+        {
+            double[][] transposedMatrix = MatrixService.CalculateTranspose(request.Matrix);
+            return Ok(transposedMatrix);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest($"Error calculating transposed matrix: {ex.Message}");
         }
     }
 }
