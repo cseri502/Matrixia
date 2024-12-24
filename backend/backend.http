@@ -1,0 +1,11 @@
+@backend_HostAddress = http://localhost:5139
+
+POST {{backend_HostAddress}}/matrix/determinant
+Content-Type: application/json
+
+{
+    "Matrix": [[2, 1, 1], [1, 3, 2], [1, 0, 0]],
+    "ShowSteps": true
+}
+
+###
