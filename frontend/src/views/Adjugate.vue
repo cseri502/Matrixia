@@ -3,5 +3,5 @@
 </script>
 
 <template>
-    <h1>gauss</h1>
+    <h1>adjugate</h1>
 </template>

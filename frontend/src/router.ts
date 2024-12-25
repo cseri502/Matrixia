@@ -3,16 +3,18 @@ import Determinant from './views/Determinant.vue';
 import InverseMatrix from './views/InverseMatrix.vue';
 import MatrixRank from './views/MatrixRank.vue';
 import MatrixTranspose from './views/MatrixTranspose.vue';
-import AdditionSubtraction from './views/AdditionSubtraction.vue';
-import GaussElimination from './views/GaussElimination.vue';
+import Adjugate from './views/Adjugate.vue';
+import PageNotFound from './views/PageNotFound.vue';
+import Hero from './views/Hero.vue';
 
-const routes = [
-  { path: '/determinant', component: Determinant },
-  { path: '/inverse-matrix', component: InverseMatrix },
-  { path: '/matrix-rank', component: MatrixRank },
-  { path: '/matrix-transpose', component: MatrixTranspose },
-  { path: '/addition-subtraction', component: AdditionSubtraction },
-  { path: '/gauss-elimination', component: GaussElimination },
+export const routes = [
+  { path: '/', component: Hero, title: 'Hero Section' },
+  { path: '/rank', component: MatrixRank, title: 'Matrix Rank' },
+  { path: '/determinant', component: Determinant, title: 'Determinant' },
+  { path: '/inverse', component: InverseMatrix, title: 'Inverse Matrix' },
+  { path: '/transpose', component: MatrixTranspose, title: 'Matrix Transpose' },
+  { path: '/adjugate', component: Adjugate, title: 'Adjugate Matrix' },
+  { path: '/:catchAll(.*)', component: PageNotFound }
 ];
 
 const router = createRouter({
