@@ -4,10 +4,18 @@ using MatrixiaApi.Services;
 
 namespace MatrixiaApi.Controllers;
 
+/// <summary>
+/// Controller for performing matrix operations for e.g.: determinant, rank, inverse, transpose, and adjoint.
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 public class MatrixiaController : ControllerBase
 {
+    /// <summary>
+    /// Calculates the determinant of a matrix.
+    /// </summary>
+    /// <param name="request">The request containing the matrix and a flag indicating whether to show steps.</param>
+    /// <returns>The determinant of the matrix and the steps if requested.</returns>
     [HttpPost("determinant")]
     public IActionResult CalculateDeterminant([FromBody] DeterminantRequest request)
     {
@@ -22,6 +30,11 @@ public class MatrixiaController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Calculates the rank of a matrix.
+    /// </summary>
+    /// <param name="request">The request containing the matrix.</param>
+    /// <returns>The rank of the matrix.</returns>
     [HttpPost("rank")]
     public IActionResult CalculateRank([FromBody] RankRequest request)
     {
@@ -36,6 +49,11 @@ public class MatrixiaController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Calculates the inverse of a matrix.
+    /// </summary>
+    /// <param name="request">The request containing the matrix.</param>
+    /// <returns>The inverse of the matrix.</returns>
     [HttpPost("inverse")]
     public IActionResult CalculateInverse([FromBody] InverseRequest request)
     {
@@ -50,6 +68,11 @@ public class MatrixiaController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Calculates the transpose of a matrix.
+    /// </summary>
+    /// <param name="request">The request containing the matrix.</param>
+    /// <returns>The transposed matrix.</returns>
     [HttpPost("transpose")]
     public IActionResult CalculateTranspose([FromBody] TransposeRequest request)
     {
@@ -64,6 +87,11 @@ public class MatrixiaController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Calculates the adjoint (or adjugate) of a matrix.
+    /// </summary>
+    /// <param name="request">The request containing the matrix.</param>
+    /// <returns>The adjoint of the matrix.</returns>
     [HttpPost("adjoint")]
     public IActionResult CalculateAdjoint([FromBody] AdjointRequest request)
     {
@@ -78,4 +106,3 @@ public class MatrixiaController : ControllerBase
         }
     }
 }
-
