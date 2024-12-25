@@ -21,9 +21,11 @@ Unlock the power of matrix mathematics with Matrixia, the ultimate app for perfo
 
 ## ✨ Features
 
-- Determinant Calculation
-- Matrix Rank
-- Matrix Inversion
+- Determinant calculation
+- Matrix rank
+- Matrix inversion
+- Transpose matrix
+- Adjoint (or adjugate) calculation
 
 ## ⏩ References
 - [Matrix icons created by Vitaly Gorbachev - Flaticon](https://www.flaticon.com/free-icons/matrix)
