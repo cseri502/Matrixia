@@ -87,6 +87,49 @@ public static class MatrixService
         return transposedMatrix;
     }
 
+    public static double[][] CalculateAdjoint(double[][] jaggedMatrix)
+    {
+        if (jaggedMatrix is null || jaggedMatrix.Length == 0)
+        {
+            throw new ArgumentException("Matrix cannot be null or empty.");
+        }
+
+        int n = jaggedMatrix.Length;
+
+        if (!IsSquareMatrix(jaggedMatrix))
+        {
+            throw new ArgumentException("Matrix must be square.");
+        }
+
+        // Create the cofactor matrix
+        double[][] cofactorMatrix = new double[n][];
+        for (int i = 0; i < n; i++)
+        {
+            cofactorMatrix[i] = new double[n];
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                cofactorMatrix[i][j] = CalculateCofactor(jaggedMatrix, i, j);
+            }
+        }
+
+        // Transpose the cofactor matrix to get the adjoint
+        double[][] adjointMatrix = new double[n][];
+        for (int i = 0; i < n; i++)
+        {
+            adjointMatrix[i] = new double[n];
+            for (int j = 0; j < n; j++)
+            {
+                adjointMatrix[i][j] = cofactorMatrix[j][i]; // Transpose
+            }
+        }
+
+        return adjointMatrix;
+    }
+
     private static bool IsSquareMatrix(double[][] matrix)
     {
         return matrix.Length > 0 && matrix.All(row => row.Length == matrix.Length);
@@ -213,5 +256,27 @@ public static class MatrixService
         return inverse;
     }
 
+    private static double CalculateCofactor(double[][] matrix, int row, int col)
+    {
+        int n = matrix.Length;
+        double[][] minor = new double[n - 1][];
 
+        for (int i = 0, minorRow = 0; i < n; i++)
+        {
+            if (i == row) continue; // Skip the row
+
+            minor[minorRow] = new double[n - 1];
+            for (int j = 0, minorCol = 0; j < n; j++)
+            {
+                if (j == col) continue; // Skip the column
+
+                minor[minorRow][minorCol] = matrix[i][j];
+                minorCol++;
+            }
+            minorRow++;
+        }
+
+        var result = CalculateDeterminant(minor, false);
+        return ((row + col) % 2 == 0 ? 1 : -1) * result.Determinant;
+    }
 }

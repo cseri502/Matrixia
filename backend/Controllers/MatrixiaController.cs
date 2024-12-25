@@ -63,5 +63,19 @@ public class MatrixiaController : ControllerBase
             return BadRequest($"Error calculating transposed matrix: {ex.Message}");
         }
     }
+
+    [HttpPost("adjoint")]
+    public IActionResult CalculateAdjoint([FromBody] AdjointRequest request)
+    {
+        try
+        {
+            double[][] adjointMatrix = MatrixService.CalculateAdjoint(request.Matrix);
+            return Ok(adjointMatrix);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest($"Error calculating adjugate of the matrix: {ex.Message}");
+        }
+    }
 }
 
