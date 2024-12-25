@@ -42,9 +42,9 @@ public static class MatrixService
         }
 
         double[,] inverse = GetInverse(matrix);
-        if (inverse == null)
+        if (inverse is null)
         {
-            return [];
+            throw new InvalidOperationException("Matrix is not invertible.");
         }
 
         double[][] inverseJagged = new double[n][];
@@ -62,7 +62,7 @@ public static class MatrixService
 
     public static double[][] CalculateTranspose(double[][] jaggedMatrix)
     {
-        if (jaggedMatrix == null || jaggedMatrix.Length == 0)
+        if (jaggedMatrix is null || jaggedMatrix.Length == 0)
         {
             throw new ArgumentException("Matrix cannot be null or empty.");
         }
@@ -98,7 +98,7 @@ public static class MatrixService
 
         if (!IsSquareMatrix(jaggedMatrix))
         {
-            throw new ArgumentException("Matrix must be square.");
+            throw new ArgumentException("Invalid input: Please provide a square matrix.");
         }
 
         // Create the cofactor matrix
@@ -112,7 +112,7 @@ public static class MatrixService
         {
             for (int j = 0; j < n; j++)
             {
-                cofactorMatrix[i][j] = CalculateCofactor(jaggedMatrix, i, j);
+                cofactorMatrix[i][j] = GetCofactor(jaggedMatrix, i, j);
             }
         }
 
@@ -256,7 +256,7 @@ public static class MatrixService
         return inverse;
     }
 
-    private static double CalculateCofactor(double[][] matrix, int row, int col)
+    private static double GetCofactor(double[][] matrix, int row, int col)
     {
         int n = matrix.Length;
         double[][] minor = new double[n - 1][];
@@ -276,7 +276,6 @@ public static class MatrixService
             minorRow++;
         }
 
-        var result = CalculateDeterminant(minor, false);
-        return ((row + col) % 2 == 0 ? 1 : -1) * result.Determinant;
+        return ((row + col) % 2 == 0 ? 1 : -1) * CalculateDeterminant(minor, false).Determinant;
     }
 }
