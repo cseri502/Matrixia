@@ -14,8 +14,7 @@
             <ul class="flex space-x-6">
               <li>
                 <a href="https://www.github.com/cseri502/Matrixia">
-                  <div class="duration-150 cursor-pointer" :class="`hover:text-blue-500`" title="Change theme"
-                  @click="() => toggleDark()">
+                  <div class="duration-150 cursor-pointer" :class="`hover:text-blue-500`" title="Github repository">
                   <v-icon name="fa-github" scale="1.25" />
                 </div>
                 </a>
