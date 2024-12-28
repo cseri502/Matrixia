@@ -1,49 +1,80 @@
 <template>
   <div class="p-6 bg-gray-100 dark:bg-slate-800 rounded-lg shadow-lg">
-    <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-2">
+    <!-- Generate matrix -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center mb-4">
       <div class="flex flex-col">
-        <label for="rows" class="block text-sm font-medium text-gray-900 dark:text-white">Number of Rows:</label>
-        <input type="number" v-model="rows" class="input-primary h-10" min="1" max="10" />
+        <label for="rows" class="block text-sm font-medium text-gray-900 dark:text-white">{{ props.isTwoInputs ? "Number of Rows:" : "Size of Matrix:" }}</label>
+        <input
+          type="number"
+          v-model="rows"
+          class="input-primary h-10"
+          min="1"
+          max="10"
+        />
       </div>
       <div v-if="isTwoInputs" class="flex flex-col">
         <label for="cols" class="block text-sm font-medium text-gray-900 dark:text-white">Number of Columns:</label>
-        <input type="number" v-model="cols" class="input-primary h-10" min="1" max="10" />
+        <input
+          type="number"
+          v-model="cols"
+          class="input-primary h-10"
+          min="1"
+          max="10"
+        />
       </div>
-      <button @click="generateMatrix"
-        class="h-10 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition duration-150">
-        Set Values
-      </button>
+      <div class="flex justify-center">
+        <button
+          @click="generateMatrix"
+          class="h-10 px-6 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition duration-150"
+        >
+          Set Values
+        </button>
+      </div>
     </div>
 
-    <div v-if="matrix.length > 0" class="mt-4">
+    <!-- Matrix table -->
+    <div v-if="matrix.length > 0" class="mt-4 overflow-x-auto">
       <table class="min-w-full border-separate border-spacing-2 border-none">
         <tbody>
           <tr v-for="(row, rowIndex) in matrix" :key="rowIndex">
             <td v-for="(_, colIndex) in row" :key="colIndex">
-              <input type="number" v-model.number="matrix[rowIndex][colIndex]" class="input-primary text-center" />
+              <input
+                type="number"
+                v-model.number="matrix[rowIndex][colIndex]"
+                class="input-primary text-center w-full"
+              />
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <button @click="calculate"
-      class="mt-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition duration-150">
-      Calculate
-    </button>
+    <!-- Calculate button -->
+    <div v-if="matrix.length > 0" class="flex justify-end mt-4">
+      <button
+        @click="calculate"
+        class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition duration-150"
+      >
+        Calculate
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, defineProps } from 'vue';
+import { ref } from 'vue';
 import axios from 'axios';
 
-const props = defineProps < { isTwoInputs: boolean, apiUrl: string } > ();
+const props = defineProps<{
+  isTwoInputs: boolean;
+  apiUrl: string;
+  apiParams?: Record<string, any>;
+}>();
 const emit = defineEmits(['taskResult']);
 
 const rows = ref(1);
 const cols = ref(1);
-const matrix = ref < number[][] > ([]);
+const matrix = ref<number[][]>([]);
 
 const generateMatrix = () => {
   const numberOfRows = rows.value;
@@ -56,7 +87,12 @@ const generateMatrix = () => {
 
 const calculate = async () => {
   try {
-    const response = await axios.post(props.apiUrl, { matrix: matrix.value });
+    const payload = {
+      matrix: matrix.value,
+      ...props.apiParams,
+    };
+    const response = await axios.post(props.apiUrl, payload);
+
     emit('taskResult', response.data);
   } catch (error) {
     console.error('Error sending matrix:', error);

@@ -92,7 +92,7 @@ public class MatrixiaController : ControllerBase
     /// </summary>
     /// <param name="request">The request containing the matrix.</param>
     /// <returns>The adjoint of the matrix.</returns>
-    [HttpPost("adjoint")]
+    [HttpPost("adjugate")]
     public IActionResult CalculateAdjoint([FromBody] AdjointRequest request)
     {
         try
