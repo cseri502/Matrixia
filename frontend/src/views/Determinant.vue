@@ -2,7 +2,7 @@
   <div class="relative mx-auto min-h-screen max-w-7xl px-4 py-8 flex flex-col">
     <!-- Title -->
     <div class="text-center mb-8">
-      <h2 class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+      <h2 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
         Calculate the Determinant of a Matrix
       </h2>
       <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
@@ -34,19 +34,37 @@
       </p>
 
       <!-- Calculation Steps -->
-      <div v-if="showSteps && stepsExist" class="mt-4">
-        <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Calculation Steps</h4>
+      <div v-if="showSteps && stepsExist && calculationResult.steps" class="mt-4">
+        <h4 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Calculation Steps using Gaussian elimination</h4>
         <div class="space-y-6">
-          <div v-for="(stepMatrix, stepIndex) in calculationResult.steps?.slice(0, -1)" :key="stepIndex"
+          <div v-for="(stepMatrix, stepIndex) in calculationResult.steps" :key="stepIndex"
             class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-sm">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Step {{ stepIndex + 1 }}
             </p>
             <table class="min-w-full border-separate border-spacing-2 border-none">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th v-for="colIndex in stepMatrix.length" :key="'header-' + colIndex"
+                    class="px-2 py-1 text-center text-gray-900 dark:text-gray-300">
+                    {{ 'A' + colIndex }}
+                  </th>
+                </tr>
+              </thead>
               <tbody>
-                <tr v-for="(row, rowIndex) in stepMatrix" :key="rowIndex">
-                  <td v-for="(value, colIndex) in row" :key="colIndex"
-                    class="px-2 py-1 text-center text-gray-900 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 rounded-md">
+                <tr v-for="(row, rowIndex) in stepMatrix" :key="'row-' + rowIndex">
+                  <td class="px-2 py-1 text-center font-bold text-gray-900 dark:text-gray-300">
+                    {{ rowIndex + 1 }}
+                  </td>
+                  <td v-for="(value, colIndex) in row" :key="'cell-' + rowIndex + '-' + colIndex"
+                    :class="[
+                      'px-2 py-1 text-center rounded-md',
+                      stepIndex === calculationResult.steps.length - 1 && rowIndex === colIndex 
+                        ? 'bg-yellow-200 dark:bg-yellow-500 dark:text-slate-900' 
+                        : 'bg-gray-50 dark:bg-gray-800',
+                      'text-gray-900 dark:text-gray-300'
+                    ]">
                     {{ formatNumber(value) }}
                   </td>
                 </tr>
@@ -55,6 +73,7 @@
           </div>
         </div>
       </div>
+      
     </div>
   </div>
 </template>
@@ -63,15 +82,15 @@
 import { ref, computed } from 'vue';
 import { formatNumber } from '../utility/functions'
 import MatrixInput from '../components/MatrixInput.vue';
+import LoadingSpinner from '../components/LoadingSpinner.vue';
 
 interface IDeterminantResult {
-  determinant: number; 
+  determinant: number;
   steps?: number[][]
 }
 
 const showSteps = ref(false);
 const calculationResult = ref<null | IDeterminantResult>(null);
-
 const stepsExist = computed(() => calculationResult.value?.steps && calculationResult.value.steps.length > 0);
 
 const handleResult = (result: IDeterminantResult) => {

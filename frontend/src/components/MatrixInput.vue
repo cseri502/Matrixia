@@ -35,9 +35,24 @@
     <!-- Matrix table -->
     <div v-if="matrix.length > 0" class="mt-4 overflow-x-auto">
       <table class="min-w-full border-separate border-spacing-2 border-none">
+        <thead>
+          <tr>
+            <th></th>
+            <th
+              v-for="colIndex in matrix[0].length"
+              :key="'header-' + colIndex"
+              class="text-center text-gray-900 dark:text-gray-300"
+            >
+              {{ 'A' + colIndex }}
+            </th>
+          </tr>
+        </thead>
         <tbody>
-          <tr v-for="(row, rowIndex) in matrix" :key="rowIndex">
-            <td v-for="(_, colIndex) in row" :key="colIndex">
+          <tr v-for="(row, rowIndex) in matrix" :key="'row-' + rowIndex">
+            <td class="text-center font-bold text-gray-900 dark:text-gray-300">
+              {{ rowIndex + 1 }}
+            </td>
+            <td v-for="(_, colIndex) in row" :key="'cell-' + rowIndex + '-' + colIndex">
               <input
                 type="number"
                 v-model.number="matrix[rowIndex][colIndex]"
