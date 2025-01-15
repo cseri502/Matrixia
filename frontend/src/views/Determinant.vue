@@ -64,7 +64,7 @@
             <table class="min-w-full border-separate border-spacing-2 border-none">
               <thead>
                 <tr>
-                  <th></th>
+                  <th class="w-10"></th>
                   <th
                     v-for="colIndex in stepMatrix.length"
                     :key="'header-' + colIndex"
@@ -75,17 +75,16 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  v-for="(row, rowIndex) in stepMatrix"
-                  :key="'row-' + rowIndex"
-                >
-                  <td class="px-2 py-1 text-center font-bold text-gray-900 dark:text-gray-300">
+                <tr v-for="(row, rowIndex) in stepMatrix" :key="'row-' + rowIndex">
+                  <td
+                    class="w-10 px-2 py-1 text-center font-bold text-gray-900 dark:text-gray-300"
+                  >
                     {{ rowIndex + 1 }}
                   </td>
                   <td
                     v-for="(value, colIndex) in row"
                     :key="'cell-' + rowIndex + '-' + colIndex"
-                    :class="[
+                    :class="[ 
                       'px-2 py-1 text-center rounded-md',
                       stepIndex === calculationResult.steps.length - 1 && rowIndex === colIndex
                         ? 'bg-yellow-200 dark:bg-yellow-500 dark:text-slate-900'
@@ -101,6 +100,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
