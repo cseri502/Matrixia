@@ -85,7 +85,7 @@ const props = defineProps<{
   apiUrl: string;
   apiParams?: Record<string, any>;
 }>();
-const emit = defineEmits(['taskResult']);
+const emit = defineEmits(['taskResult', 'setLoading']);
 
 const rows = ref(1);
 const cols = ref(1);
@@ -100,15 +100,17 @@ const generateMatrix = () => {
   );
 };
 
-const calculate = async () => {
+async function calculate() {
+  emit('setLoading', true);
   try {
     const payload = {
       matrix: matrix.value,
       ...props.apiParams,
     };
-    const response = await axios.post(props.apiUrl, payload);
 
+    const response = await axios.post(props.apiUrl, payload);
     emit('taskResult', response.data);
+    emit('setLoading', false);
   } catch (error) {
     console.error('Error sending matrix:', error);
   }
