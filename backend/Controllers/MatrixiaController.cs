@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MatrixiaApi.Contracts;
 using MatrixiaApi.Services;
+using MatrixiaApi.Entities;
 
 namespace MatrixiaApi.Controllers;
 
@@ -60,7 +61,7 @@ public class MatrixiaController : ControllerBase
         try
         {
             double[][] inverse = MatrixService.CalculateInverse(request.Matrix);
-            return Ok(inverse);
+            return Ok(new InverseResponse { Inverse = inverse });
         }
         catch (ArgumentException ex)
         {
@@ -79,7 +80,7 @@ public class MatrixiaController : ControllerBase
         try
         {
             double[][] transposedMatrix = MatrixService.CalculateTranspose(request.Matrix);
-            return Ok(transposedMatrix);
+            return Ok(new TransposeResponse { Transpose = transposedMatrix });
         }
         catch (ArgumentException ex)
         {
@@ -98,7 +99,7 @@ public class MatrixiaController : ControllerBase
         try
         {
             double[][] adjointMatrix = MatrixService.CalculateAdjoint(request.Matrix);
-            return Ok(adjointMatrix);
+            return Ok(new AdjointResponse{Adjugate = adjointMatrix});
         }
         catch (ArgumentException ex)
         {

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 bg-gray-100 dark:bg-slate-800 rounded-lg shadow-lg">
+  <div class="p-6 bg-gray-100 dark:bg-slate-800 rounded-lg shadow-lg min-w-full md:min-w-[30rem]">
     <!-- Generate matrix -->
     <div class="p-4 bg-white dark:bg-slate-700 rounded-lg shadow-md mb-6">
       <div class="flex items-center justify-between">
