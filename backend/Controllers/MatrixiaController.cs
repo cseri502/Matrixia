@@ -22,7 +22,7 @@ public class MatrixiaController : ControllerBase
     {
         try
         {
-            var result = MatrixService.CalculateDeterminant(request.Matrix, request.ShowSteps ?? false);
+            var result = MatrixService.CalculateDeterminant(request.Matrix, request.ShowSteps ?? false, request.UseFractions ?? false);
             return Ok(result);
         }
         catch (Exception ex)

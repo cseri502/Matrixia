@@ -1,20 +1,35 @@
+using System.Numerics;
 using MatrixiaApi.Entities;
 
 namespace MatrixiaApi.Services;
 
 public static class MatrixService
 {
-    public static DeterminantResult CalculateDeterminant(double[][] matrix, bool showSteps)
+    public static DeterminantResult CalculateDeterminant(double[][] matrix, bool showSteps, bool useFractions)
     {
         if (!IsSquareMatrix(matrix))
         {
             throw new ArgumentException("Invalid input: Please provide a square matrix.");
         }
 
-        var steps = new List<double[][]>();
-        double determinant = GaussElimination(matrix, steps, showSteps);
+        if (useFractions)
+        {
+            var fractionMatrix = matrix
+                .Select(row => row.Select(value => new Fraction((BigInteger)value, 1)).ToArray())
+                .ToArray();
+            var steps = new List<Fraction[][]>();
+            var determinant = GaussEliminationWithFractions(fractionMatrix, steps, showSteps);
+            var stepsJson = steps.Select(s => s.Select(row => row.Select(f => new FractionJson(f)).ToArray()).ToArray()).ToArray();
 
-        return new DeterminantResult((int)Math.Round(determinant), steps);
+            return new DeterminantResult((int)determinant.Numerator,
+                [.. stepsJson.Select(s => s.Cast<object>().ToArray())]);
+        }
+        else
+        {
+            var steps = new List<double[][]>();
+            double determinant = GaussElimination(matrix, steps, showSteps);
+            return new DeterminantResult((int)Math.Round(determinant), [.. steps.Select(step => step.Cast<object>().ToArray())]);
+        }
     }
 
     public static int CalculateRank(double[][] matrix)
@@ -170,6 +185,41 @@ public static class MatrixService
         return Math.Round(determinant, 2);
     }
 
+    private static Fraction GaussEliminationWithFractions(Fraction[][] matrix, List<Fraction[][]> steps, bool showSteps)
+    {
+        int n = matrix.Length;
+        Fraction determinant = new Fraction(1, 1);
+
+        for (int i = 0; i < n; i++)
+        {
+            Fraction pivot = matrix[i][i];
+            if (pivot.Numerator == 0)
+            {
+                return new Fraction(0, 1);
+            }
+
+            determinant *= pivot;
+
+            for (int j = i + 1; j < n; j++)
+            {
+                Fraction factor = matrix[j][i] / pivot;
+                for (int k = i; k < n; k++)
+                {
+                    matrix[j][k] -= factor * matrix[i][k];
+                }
+            }
+
+            if (showSteps)
+            {
+                var stepMatrix = matrix.Select(row =>
+                    row.Select(value => new Fraction(value.Numerator, value.Denominator)).ToArray()).ToArray();
+                steps.Add(stepMatrix);
+            }
+        }
+
+        return determinant;
+    }
+
     private static int GetRank(double[][] matrix)
     {
         int n = matrix.Length;
@@ -195,6 +245,7 @@ public static class MatrixService
                             tempMatrix[i][j] -= factor * tempMatrix[row][j];
                         }
                     }
+
                     break;
                 }
             }
@@ -214,6 +265,7 @@ public static class MatrixService
             {
                 augmented[i, j] = matrix[i, j];
             }
+
             augmented[i, i + n] = 1;
         }
 
@@ -273,9 +325,10 @@ public static class MatrixService
                 minor[minorRow][minorCol] = matrix[i][j];
                 minorCol++;
             }
+
             minorRow++;
         }
 
-        return ((row + col) % 2 == 0 ? 1 : -1) * CalculateDeterminant(minor, false).Determinant;
+        return ((row + col) % 2 == 0 ? 1 : -1) * CalculateDeterminant(minor, false, false).Determinant;
     }
 }
