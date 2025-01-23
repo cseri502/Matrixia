@@ -18,22 +18,39 @@
       <MatrixInput v-show="!isLoading"
         :isTwoInputs="false"
         apiUrl="/matrixia/determinant"
-        :apiParams="{ showSteps }"
+        :apiParams="{ showSteps, useFractions }"
         @taskResult="handleResult"
         @setLoading="setLoadingState"
       />
 
       <!-- Show Steps input button -->
-      <div class="mt-4 flex items-center space-x-2">
-        <input
-          id="showSteps"
-          type="checkbox"
-          v-model="showSteps"
-          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
-        />
-        <label for="showSteps" class="text-sm font-medium text-gray-900 dark:text-gray-300">
-          Show Calculation Steps
-        </label>
+      <div class="mt-4 flex flex-col items-center space-y-4">
+        <div class="flex items-center space-x-2">
+          <input
+            id="showSteps"
+            type="checkbox"
+            v-model="showSteps"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
+          />
+          <label for="showSteps" class="text-sm font-medium text-gray-900 dark:text-gray-300">
+            Show Calculation Steps
+          </label>
+        </div>
+
+        <!-- Format Selection Dropdown -->
+        <div v-if="showSteps" class="flex items-center space-x-2">
+          <label for="formatSelection" class="text-sm font-medium text-gray-900 dark:text-gray-300">
+            Display format:
+          </label>
+          <select
+            id="formatSelection"
+            v-model="useFractions"
+            class="px-3 py-1 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
+          >
+            <option :value="true">Fractions</option>
+            <option :value="false">Decimals</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -92,7 +109,7 @@
                       'text-gray-900 dark:text-gray-300',
                     ]"
                   >
-                    {{ formatNumber(value) }}
+                    {{ typeof value === 'object' ? value['value'] : formatNumber(value) }}
                   </td>
                 </tr>
               </tbody>
@@ -117,6 +134,7 @@ interface IDeterminantResult {
 }
 
 const showSteps = ref(false);
+const useFractions = ref(false);
 const isLoading = ref(false);
 const calculationResult = ref<null | IDeterminantResult>(null);
 
